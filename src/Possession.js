@@ -1,10 +1,10 @@
 export default class Possession {
-  constructor(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement) {
+  constructor(possesseur, libelle, valeur, dateDebut, dateFin = null, tauxAmortissement) {
     this.possesseur = possesseur;
     this.libelle = libelle;
     this.valeur = valeur;
-    this.dateDebut = dateDebut;
-    this.dateFin = dateFin;
+    this.dateDebut = new Date(dateDebut);
+    this.dateFin = dateFin ? new Date(dateFin) : null;
     this.tauxAmortissement = tauxAmortissement;
   }
 
@@ -21,10 +21,9 @@ export default class Possession {
       month: dateActuelle.getMonth() - this.dateDebut.getMonth(),
       day: dateActuelle.getDate() - this.dateDebut.getDate(),
     };
-  
-    var raison = differenceDate.year + differenceDate.month / 12 + differenceDate.day / 365;
 
-    const result = this.valeur - this.valeur *(raison * this.tauxAmortissement / 100);
-    return result;
+    var raison = differenceDate.year + differenceDate.month / 12 + differenceDate.day / 365;
+    const result = this.valeur - this.valeur * (raison * this.tauxAmortissement / 100);
+    return Math.max(result, 0);
   }
 }
